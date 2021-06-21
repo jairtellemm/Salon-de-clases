@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Cargando un modelo 3D con THREE.js</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<div id="player">
+
+    <div id="pantalla">
+    	<audio id="song">	
+    	</audio>
+
+    	<button id="atras"onClick="atras()"> 
+    	 <i class="fa fa-step-backward"></i>
+    		</button>
+
+	    <button id="stop"onClick="parar()"> 
+	     <i class="fa fa-stop"></i>
+	 	</button>
+	    
+	    <button id="play"onClick="reproducir()">
+	     <i class="fa fa-play"></i>
+	 	</button>
+	    
+	   <button id="pausa"onClick="pausa()">
+	     <i class="fa fa-pause"></i>
+	 	</button>
+	    
+	   <button id="next"onClick="siguiente()">
+	     <i class="fa fa-step-forward"></i>
+	 	</button>
+          
+      </div>
+    </div>
+
+<head><script src='//static.codepen.io/assets/editor/live/console_runner-ce3034e6bde3912cc25f83cccb7caa2b0f976196f2f2d52303a462c826d54a73.js'></script><script src='//static.codepen.io/assets/editor/live/css_live_reload_init-e9c0cc5bb634d3d14b840de051920ac153d7d3d36fb050abad285779d7e5e8bd.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="https://codepen.io/buzns/pen/YrrBZV" /><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+<style class="cp-pen-styles">
+
+body { background:#3c3c3c;} 
+#play {background:#0099FC; margin:auto; width:50px;  min-height:50px; border:1px white; border-radius:5%;}#play:active {background:#91D4FF;}
+
+#pausa {background:#FFFFFF;  margin:auto;  width:30px;  min-height:40px;  border:1px white; border-radius:5%;}#pausa:active {background:#DADADA;}
+
+#next {background:#ff3020; margin:auto; width:30px; min-height:40px;  border:1px white;  border-radius:5%;}#next:active {background:#f7a49e;}
+
+#stop {background:#FFFFFF; margin:auto; width:30px; min-height:40px;  border:1px white; border-radius:5%;}#stop:active {background:#DADADA;}
+
+#atras {background:#ff3020;  margin:auto; width:30px; min-height:40px;  border:1px white; border-radius:5%;}#atras:active {background:#f7a49e;}
+
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #FFFFFF;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
+
+			/*===========BOTONES LUCES Y MATERIALES==========*/
+						
+.button {
+text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+text-align:center;
+text-decoration: none;
+font-family: 'Helvetica Neue', Helvetica, sans-serif;
+display:inline-block;
+color: #FFF;
+background: #4CAF90;
+padding: 7px 20px;
+white-space: nowrap;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 100px;
+margin: 10px 5px;
+-webkit-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
+}
+.button {
+  background: #696969; /*GRIS OSCURO*/
+  box-shadow: 0px 0px 8px 8px #C7C7C7;   /*GRIS CLARO*/
+}
+.button:hover{
+  background: #C7C7C7;   /*GRIS CLARO*/
+}
+.button:active{
+  box-shadow: 0px 3px 0px 0px #FFFFFF; /* BLANCO*/
+}
+ /*-------------------------------------------------------*/
+
+.button2 {
+text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+text-align:center;
+text-decoration: none;
+font-family: 'Helvetica Neue', Helvetica, sans-serif;
+display:inline-block;
+color: #FFF;
+background: #4CAF90;
+padding: 7px 20px;
+white-space: nowrap;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 100px;
+margin: 10px 5px;
+-webkit-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
+}
+.button2 {
+  background: #696969; /*GRIS OSCURO*/
+  box-shadow: 0px 0px 8px 8px #C7C7C7;   /*GRIS CLARO*/
+}
+.button2:hover{
+  background: #C7C7C7;   /*GRIS CLARO*/
+}
+.button2:active{
+  box-shadow: 0px 3px 0px 0px #FFFFFF; /* BLANCO*/
+}
+ /*-------------------------------------------------------*/
+
+.button3{
+text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+text-align:center;
+text-decoration: none;
+font-family: 'Helvetica Neue', Helvetica, sans-serif;
+display:inline-block;
+color: #FFF;
+background: #7F8C8D;
+padding: 7px 20px;
+white-space: nowrap;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 100px;
+margin: 10px 5px;
+-webkit-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
+}
+.button3 {
+  background: #696969; /*GRIS OSCURO*/
+  box-shadow: 0px 0px 8px 8px #C7C7C7;   /*GRIS CLARO*/
+}
+.button3:hover{
+  background: #C7C7C7;   /*GRIS CLARO*/
+}
+.button3:active{
+  box-shadow: 0px 3px 0px 0px #FFFFFF; /* BLANCO*/
+}
+ /*-------------------------------------------------------*/
+
+.buttonP {
+text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+text-align:center;
+text-decoration: none;
+font-family: 'Helvetica Neue', Helvetica, sans-serif;
+display:inline-block;
+color: #FFF;
+background: #4CAF90;
+padding: 7px 20px;
+white-space: nowrap;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 100px;
+margin: 10px 5px;
+-webkit-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
+}
+.buttonP {
+  background: #9AFF8A;  /*VERDE CLARO*/
+  box-shadow: 0px 0px 6px 6px #23FF00; /*VERDE OSCURO*/
+}
+.buttonP:hover{
+  background:  #23FF00;  /*VERDE OSCURO*/
+}
+.buttonP:active{
+  box-shadow: 0px 3px 0px 0px #FFFFFF; /* BLANCO*/
+}
+ /*-------------------------------------------------------*/
+
+.buttonA {
+text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+text-align:center;
+text-decoration: none;
+font-family: 'Helvetica Neue', Helvetica, sans-serif;
+display:inline-block;
+color: #FFF;
+background: #4CAF90;
+padding: 7px 20px;
+white-space: nowrap;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 100px;
+margin: 10px 5px;
+-webkit-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
+}
+.buttonA {
+  background: #FF8282;  /* ROJO CLARO*/
+  box-shadow: 0px 0px 6px 6px   #FC0000; /* ROJO OSCURO */
+}
+.buttonA:hover{
+  background: #FC0000; /* ROJO OSCURO */
+}
+.buttonA:active{
+  box-shadow: 0px 3px 0px 0px #FFFFFF; /* BLANCO*/
+}
+ /*-------------------------------------------------------*/
+	</style>
+
+	</head>
+	<button class="button" onclick="bump_mapping()" name="textura1">Bump Mapping</button>
+	<button class="button2" onclick="displacement()" name="textura1">Displacement Mapping</button>
+	<button class="button3" onclick="ambientocc()" name="textura1">Ambient Occlusion Mapping</button>
+	<font color="white">Luz Ambiente</font>
+	<button class="buttonP" onclick="luz_ambiente()" name="textura1">ON</button>
+	<button class="buttonA" onclick="apagar_amb()" name="textura1">OFF</button>
+	<font color="white">Luz PointLight</font>
+	<button class="buttonP" onclick="pointlight()" name="textura1">ON</button>
+	<button class="buttonA" onclick="apagar_poi()" name="textura1">OFF</button>
+	<font color="white">Luz Spotlight</font>
+	<button class="buttonP" onclick="spotlight()" name="textura1">ON</button>
+	<button class="buttonA" onclick="apagar_spo()" name="textura1">OFF</button>
+
+	<body>
+
+		<script src="libs/three.js"></script>
+		<script src="libs/three.min.js"></script>
+        <script src="libs/Mirror.js"></script>
+		<!--Loaders-->
+		<script src="libs/DDSLoader.js"></script>
+		<script src="libs/MTLLoader.js"></script>
+		<script src="libs/OBJLoader.js"></script>
+		<!--****librerias para el video****-->
+		
+		<script src="libs/Detector.js"></script>
+		<script src="libs/Stats.js"></script>
+		<script src="libs/OrbitControls.js"></script>
+		<script src="libs/THREEx.KeyboardState.js"></script>
+		<script src="libs/THREEx.FullScreen.js"></script>
+		<script src="libs/THREEx.WindowResize.js"></script>
+
+		<script src="libs/jquery-1.9.1.js"></script>
+		<script src="libs/jquery-ui.js"></script>
+		<link rel=stylesheet href="css/jquery-ui.css" />
+		<link rel=stylesheet href="css/info.css"/>
+		<script src="js/info.js"></script>
+
+		<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+		<!--------------------------------------------->
+
+		<!--Controles-->
+		<script src="libs/OrbitControls.js"></script>
+		<!--<script src="js/controls/FlyControls.js"></script>-->
+
+		<script src="main.js"></script>
+
+	</body>
+
+	<!----------------------------------------------------------------------------------->
+	<!----------------------------------------------------------------------------------->
+
+
+	<!----------------------------------------------------------------------------------->
+	<!----------------------------------------------------------------------------------->
+
+</html>
